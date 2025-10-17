@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html class="dark" lang="so">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>e-Balami - Fududeynta Safarkaaga Caafimaad</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            @keyframes pulse-glow {
+                0%, 100% { box-shadow: 0 0 0.5rem #FFC107, 0 0 1rem #FFC107; opacity: 0.8; }
+                50% { box-shadow: 0 0 1rem #FFC107, 0 0 1.5rem #FFC107, 0 0 2.5rem #FFC107; opacity: 1; }
+            }
+            .animate-pulse-glow { animation: pulse-glow 2.5s infinite ease-in-out; }
+        }
+        .page-hidden { display: none; } /* Simplified for broader compatibility */
+        #city-dropdown { position: absolute; z-index: 50; width: 100%; background-color: #1f2937; border: 1px solid #FFC107; border-radius: 0.5rem; max-height: 150px; overflow-y: auto; margin-top: 0.25rem; }
+        #city-dropdown div { padding: 0.75rem; color: white; cursor: pointer; }
+        #city-dropdown div:hover { background-color: #FFC107; color: #121212; }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: { colors: { "primary": "#FFC107", "background-dark": "#121212" }, fontFamily: { "display": ["Manrope"] } },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-dark font-display text-slate-200">
+
+<div class="flex flex-col min-h-screen">
+    <!-- HEADERKA GUUD -->
+    <header class="sticky top-0 z-50 bg-background-dark/95 backdrop-blur-sm border-b border-primary/20">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-20"><a class="flex items-center gap-3 cursor-pointer" onclick="showPage('page-home')"><img src="https://ebalami.com/Assets/e-balami-Logo.png" alt="e-Balami Logo" class="h-10 w-auto"><span class="text-2xl font-bold text-white">e-Balami</span></a><nav id="main-nav" class="hidden md:flex items-center gap-8"><a class="text-sm font-medium hover:text-primary transition-colors cursor-pointer" onclick="scrollToSection('page-home-hero')">Home</a><a class="text-sm font-medium hover:text-primary transition-colors cursor-pointer" onclick="scrollToSection('services')">Adeegyadeena</a><a class="text-sm font-medium hover:text-primary transition-colors cursor-pointer" onclick="scrollToSection('locations')">Wadamada</a><a class="text-sm font-medium hover:text-primary transition-colors cursor-pointer" onclick="scrollToSection('testimonials')">Markhaatiyaal</a></nav></div></div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- BOGGA 1: HOMEPAGE OO DHAMMAYSTIRAN -->
+        <div id="page-home">
+             <section id="page-home-hero" class="relative min-h-[calc(100vh-5rem)] flex items-center justify-center text-center text-white" style='background-image: linear-gradient(rgba(18,18,18,0.7), rgba(18,18,18,0.7)), url("https://ebalami.com/Assets/Team-Hosow.jpg"); background-size: cover; background-position: center 27%;'>
+                <div class="container mx-auto px-4 max-w-4xl py-24"><h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-4"> </h1><p class="text-lg md:text-xl max-w-3xl mx-auto text-slate-200 mb-8"></p><button onclick="startBookingProcess('package')" class="inline-flex items-center justify-center rounded-full h-14 px-10 bg-primary text-background-dark text-lg font-bold transition-transform duration-300 ease-in-out transform hover:scale-105 animate-pulse-glow">Dalbo Adeeg Dhammaystiran</button></div>
+             </section>
+             <section class="py-16 sm:py-24" id="services">
+                 <div class="container mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center max-w-3xl mx-auto"><h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Adeegyadayada</h2><p class="mt-4 text-lg text-slate-400">Waxaan bixinaa dhamaan adeegyada aad ubaahan tahay inta aad safarka caafimaad ku jirto.</p></div>
+                     <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                         <div onclick="startBookingProcess('Ballanso Hotel')" class="group cursor-pointer rounded-lg bg-slate-800/50 p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-transparent hover:border-primary/30"><div class="flex justify-center items-center h-16 w-16 rounded-full bg-primary/20 text-primary mx-auto mb-6"><span class="material-symbols-outlined text-4xl">hotel</span></div><h3 class="text-lg font-bold text-white">Ballanso Hotel</h3></div>
+                         <div onclick="startBookingProcess('Ballanso Hospital')" class="group cursor-pointer rounded-lg bg-slate-800/50 p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-transparent hover:border-primary/30"><div class="flex justify-center items-center h-16 w-16 rounded-full bg-primary/20 text-primary mx-auto mb-6"><span class="material-symbols-outlined text-4xl">local_hospital</span></div><h3 class="text-lg font-bold text-white">Ballanso Hospital</h3></div>
+                         <div onclick="startBookingProcess('Turjumaan & Taxi')" class="group cursor-pointer rounded-lg bg-slate-800/50 p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-transparent hover:border-primary/30"><div class="flex justify-center items-center h-16 w-16 rounded-full bg-primary/20 text-primary mx-auto mb-6 relative"><span class="material-symbols-outlined text-3xl absolute -translate-x-2.5 -translate-y-1">translate</span><span class="material-symbols-outlined text-3xl absolute translate-x-2.5 translate-y-1">local_taxi</span></div><h3 class="text-lg font-bold text-white">Turjumaan & Taxi</h3></div>
+                         <div class="group relative rounded-lg bg-slate-800/50 p-6 text-center"><div class="flex justify-center items-center h-16 w-16 rounded-full bg-slate-700/50 text-slate-400 mx-auto mb-6"><span class="material-symbols-outlined text-4xl">medical_services</span></div><h3 class="text-lg font-bold text-slate-400">Adeegyo Dheeraad ah</h3><div class="absolute inset-0 bg-slate-900/95 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><p class="text-center text-sm px-2">Kaalmada Fiisaha<br>Ballanta Safaaradda</p></div></div>
+                     </div>
+                 </div>
+             </section>
+             <section class="bg-primary py-10"><p class="text-2xl sm:text-3xl font-bold text-center text-background-dark uppercase tracking-wider">Maalin Kasta Waxaan u Adeegnaa in ka Badan 50+ Macmiil</p></section>
+             <section class="py-16 sm:py-24 bg-slate-900" id="locations">
+                 <div class="container mx-auto px-4 text-center"><h2 class="text-3xl sm:text-4xl font-bold text-white mb-10">Wadamada Aan Ka Hawlgalno</h2><div class="mt-12 flex justify-center items-center flex-wrap gap-x-8 gap-y-6"><div title="Ethiopia (Available)"><img alt="Flag of Ethiopia" class="h-16 w-24 object-cover rounded-lg shadow-md transition-transform duration-300 hover:scale-110" src="https://flagcdn.com/w160/et.png"/></div><div title="India (Available)"><img alt="Flag of India" class="h-16 w-24 object-cover rounded-lg shadow-md transition-transform duration-300 hover:scale-110" src="https://flagcdn.com/w160/in.png"/></div><div title="Egypt (Coming Soon)"><img alt="Flag of Egypt" class="h-16 w-24 object-cover rounded-lg shadow-md filter grayscale opacity-50 transition-all duration-300 hover:grayscale-0 hover:opacity-100" src="https://flagcdn.com/w160/eg.png"/></div><div title="Germany (Coming Soon)"><img alt="Flag of Germany" class="h-16 w-24 object-cover rounded-lg shadow-md filter grayscale opacity-50 transition-all duration-300 hover:grayscale-0 hover:opacity-100" src="https://flagcdn.com/w160/de.png"/></div><div title="Turkey (Coming Soon)"><img alt="Flag of Turkey" class="h-16 w-24 object-cover rounded-lg shadow-md filter grayscale opacity-50 transition-all duration-300 hover:grayscale-0 hover:opacity-100" src="https://flagcdn.com/w160/tr.png"/></div></div></div>
+             </section>
+             <section class="py-16 sm:py-24" id="testimonials">
+                 <div class="container mx-auto px-4"><div class="text-center max-w-3xl mx-auto"><h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-white">Maxay Macaamiisheennu naga Yidhaahdeen</h2></div>
+                     <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+                         <div class="flex flex-col bg-slate-800/50 p-6 rounded-lg"><img alt="Photo of Sahra" class="w-24 h-24 rounded-full object-cover mx-auto -mt-16 mb-4 border-4 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkKjvqNYWUXvRBMJV-fjtX9_DazGVf2kJAhJXFy96tJkFfMcNfhyIhNq30uL2o74PLxVHfVp7lVR_dlmkZOzSlMRqMyET0LpJUKdQIPim9W_ghAXfmdWvBAaRrjByg2aVflYrqD79cdASCfNGbkGO1P4hf7XKJZ5Jsda3AkpMoynxX51jMvgMCFsaJ21i02PzXguI_WFOj9KRxPGaj_2xCv911phMdoDF2d3ZmQMbAQBBO6Kx_6hwW9ZPpu2FNN37t2EYZ7jtAObXa"/><blockquote class="flex-grow text-slate-400 italic text-center">"Waxaan u mahadcelinayaa Shirkada e-Balami, Waxay iga caawiyeen inaan helo daryeel caafimaad oo aan u baahnaa iyagoo wax walba ii sii diyaariyey inta aanan safarka u bixin."</blockquote><footer class="mt-4 text-center"><p class="font-bold text-white">Sahra Jaamac</p><p class="text-sm text-primary">Macmiil ku qanacsan Adeegyadeena</p></footer></div>
+                         <div class="flex flex-col bg-slate-800/50 p-6 rounded-lg"><img alt="Photo of Cabdullahi" class="w-24 h-24 rounded-full object-cover mx-auto -mt-16 mb-4 border-4 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNwyqJD5CEAKpEndVtgoiC3EHjutffs-TMc6FhjsLVwNG75pJTU8NWMUS-lDzZzK5ZgUuXgEt0iZsSokm6id5rvCk03lzdTLUdvyQWw1bXpGxNGBpt_upXJG4pZh7OTthkBfch3yxM4AZIGN_Wt-6WnpW4eUpteUz8SF8f0YbFXqIOF3kjL5Ti9F9XLaiuWvFZCN2ZoztqwFhrZ2DITw8HrZV1VkLi15M4YY31UQIghx59jolUADC44sPlNV9Lm_Whi8k4YYyT8cw1"/><blockquote class="flex-grow text-slate-400 italic text-center">"Adeeggoodu waa mid aad u fiican. Waxaan kula talinayaa qof kasta oo u baahan daryeel caafimaad inuu kawarhayo halkan, Turjumaanadii dadka dhici jirtey waa laga reystey."</blockquote><footer class="mt-4 text-center"><p class="font-bold text-white">Cabdullahi Cige</p><p class="text-sm text-primary">Macmiil ku qanacsan Adeegyadeena</p></footer></div>
+                         <div class="flex flex-col bg-slate-800/50 p-6 rounded-lg"><img alt="Photo of Qoyska Xasan" class="w-24 h-24 rounded-full object-cover mx-auto -mt-16 mb-4 border-4 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0avBSm3tVRX-sTbeMxseDHAyjDuo79AfxGe-Up6a36om8D3SMkT7ADPKZa1ns34DgK6RgEQIA63n75ZUdK9WCLUY-UAHRKiW0M7lvjnzoEELT3So2UXYLo2KwfP_LSULa7M0Wgok1a8jSuz0KPBSGcCd1OjUYbJjcaWqZE3BE48fuygH-1PQl3tGgrM2RR_vij-YNsdfC_UnINDY2vmUIjaemXNVwNx2GnANndDuFpq6mER-1Lg3y9JKXNECnXkpdt_94FRsA9eG9"/><blockquote class="flex-grow text-slate-400 italic text-center">"Waxay naga caawiyeen in naloo sii diyaariyo adeeg kasta oo aan ubaahneyn intaan safarka ku jirno Sida: Hotel, tujumaan iyo Taxi-ga Garoonka. Waxaan aad ugu faraxsanahay adeeggooda."</blockquote><footer class="mt-4 text-center"><p class="font-bold text-white">Sh. Xasan</p><p class="text-sm text-primary">Macmiil ku qanacsan Adeegyadeena</p></footer></div>
+                     </div>
+                 </div>
+             </section>
+        </div>
+
+        <!-- BOGAGGA KALE OO DHAMMAYSTIRAN -->
+         <div id="page-personal-info" class="page-hidden min-h-[80vh] flex items-center justify-center py-12 px-4">
+             <div class="w-full max-w-lg space-y-6">
+                 <div class="text-center"><p class="text-sm text-slate-400 mb-2">Tallaabada 1/4</p><div class="bg-slate-700 h-1 rounded-full"><div class="bg-primary h-1 rounded-full" style="width: 25%"></div></div></div>
+                 <h2 class="text-2xl font-bold text-center text-white">Macluumaadkaaga Aasaasiga ah</h2>
+                 <div id="form-error" class="hidden bg-red-900/50 text-red-200 p-3 rounded text-sm text-center border border-red-500/50"></div>
+                 <form class="space-y-4" onsubmit="return false;">
+                     <div><label for="full-name" class="block text-sm text-white mb-1">Magaca oo Dhammaystiran *</label><input id="full-name" type="text" class="w-full bg-slate-800 border-slate-600 rounded-md text-white focus:border-primary focus:ring-primary"></div>
+                     <div class="grid grid-cols-2 gap-4">
+                         <div><label for="age" class="block text-sm text-white mb-1">Da'da *</label><input id="age" type="number" class="w-full bg-slate-800 border-slate-600 rounded-md text-white focus:border-primary focus:ring-primary"></div>
+                         <div><label for="current-city" class="block text-sm text-white mb-1">Magaalada Aad Joogto *</label><input id="current-city" type="text" class="w-full bg-slate-800 border-slate-600 rounded-md text-white focus:border-primary focus:ring-primary"></div>
+                     </div>
+                     <div><label for="phone-number" class="block text-sm text-white mb-1">Lambarka Taleefanka *</label><div class="flex">
+                         <select id="country-code" class="bg-slate-800 border-slate-600 rounded-l-md text-white focus:border-primary focus:ring-primary border-r-0">
+                             <option value="+252">🇸🇴 +252</option><option value="+251">🇪🇹 +251</option><option value="+254">🇰🇪 +254</option><option value="+253">🇩🇯 +253</option><option value="+256">🇺🇬 +256</option>
+                         </select>
+                         <input id="phone-number" type="tel" placeholder="Tusaale: 61..." class="w-full bg-slate-800 border-slate-600 rounded-r-md text-white focus:border-primary focus:ring-primary">
+                     </div></div>
+                     <div class="flex items-center justify-center text-xs text-slate-400 gap-1 pt-2"><span class="material-symbols-outlined text-sm">lock</span> Macluumaadkaaga waa la ilaalinayaa.</div>
+                     <button type="button" onclick="saveAndGoToNextStep()" class="w-full py-3 bg-primary text-background-dark font-bold rounded-md hover:bg-primary/90 transition-colors !mt-6">Xiga</button>
+                 </form>
+                 <button onclick="showPage('page-home')" class="w-full text-sm text-slate-500 hover:text-white">Ama ku laabo Bogga Hore</button>
+             </div>
+         </div>
+         <div id="page-destination" class="page-hidden min-h-[80vh] flex items-center justify-center py-12 px-4">
+            <div class="w-full max-w-md space-y-6 bg-slate-900/80 p-8 rounded-xl border border-slate-700">
+                <div class="text-center"><p class="text-sm text-slate-400 mb-2">Tallaabada 2/4</p><div class="bg-slate-700 h-1 rounded-full"><div class="bg-primary h-1 rounded-full" style="width: 50%"></div></div></div>
+                <h2 class="text-2xl font-bold text-center text-white">Xaggeed u socotaa?</h2>
+                <div id="dest-error" class="hidden bg-red-900/50 text-red-200 p-3 rounded text-sm text-center border border-red-500/50"></div>
+                <div class="relative">
+                    <input id="destination-input" type="text" placeholder="Qor magaalada (tusaale: Addis...)" class="w-full bg-background-dark border-primary rounded-md text-white p-4 pl-12 focus:ring-2 focus:ring-primary" autocomplete="off">
+                    <span class="material-symbols-outlined absolute left-4 top-4 text-primary">search</span>
+                    <div id="city-dropdown" class="hidden"></div>
+                </div>
+                <button onclick="validateStep2()" class="w-full py-3 bg-primary text-background-dark font-bold rounded-md hover:bg-primary/90 mt-4">Xiga</button>
+                <button onclick="showPage('page-personal-info')" class="w-full text-sm text-slate-500 hover:text-white text-center mt-4 block">Ku laabo</button>
+            </div>
+        </div>
+        <div id="page-services-package" class="page-hidden min-h-[80vh] flex items-center justify-center py-12 px-4">
+            <div class="w-full max-w-md bg-slate-800/50 p-8 rounded-xl border border-slate-700">
+                <div class="text-center mb-6"><p class="text-sm text-slate-400 mb-2">Tallaabada 3/4</p><div class="bg-slate-700 h-1 rounded-full"><div class="bg-primary h-1 rounded-full" style="width: 75%"></div></div><h2 class="text-2xl font-bold text-white mt-4">Xidhmo Dhamaystiran</h2><p class="text-sm text-slate-400 mt-2">Waad ka saari kartaa haduu jiro adeeg aadan rabin.</p></div>
+                <div class="space-y-3" id="package-services-list">
+                    <label class="flex items-center p-3 bg-slate-900 rounded border border-slate-700 cursor-pointer"><input type="checkbox" checked class="text-primary focus:ring-primary bg-slate-800 border-slate-600 rounded"><span class="ml-3 text-white">Ballanso Hotel</span></label>
+                    <label class="flex items-center p-3 bg-slate-900 rounded border border-slate-700 cursor-pointer"><input type="checkbox" checked class="text-primary focus:ring-primary bg-slate-800 border-slate-600 rounded"><span class="ml-3 text-white">Ballanso Hospital</span></label>
+                    <label class="flex items-center p-3 bg-slate-900 rounded border border-slate-700 cursor-pointer"><input type="checkbox" checked class="text-primary focus:ring-primary bg-slate-800 border-slate-600 rounded"><span class="ml-3 text-white">Turjumaan & Taxi</span></label>
+                </div>
+                <button onclick="goToPayment()" class="w-full py-3 bg-primary text-background-dark font-bold rounded-md hover:bg-primary/90 mt-6">Xiga</button>
+                <button onclick="showPage('page-destination')" class="w-full text-sm text-slate-500 hover:text-white text-center mt-4 block">Ku laabo</button>
+            </div>
+        </div>
+        <div id="page-services-single" class="page-hidden min-h-[80vh] flex items-center justify-center py-12 px-4">
+            <div class="w-full max-w-md bg-slate-800/50 p-8 rounded-xl border border-slate-700">
+                <div class="text-center mb-6"><p class="text-sm text-slate-400 mb-2">Tallaabada 3/4</p><div class="bg-slate-700 h-1 rounded-full"><div class="bg-primary h-1 rounded-full" style="width: 75%"></div></div><h2 class="text-2xl font-bold text-white mt-4">Adeeggaaga</h2></div>
+                <div class="p-4 bg-primary/10 border border-primary/30 rounded mb-6 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary">check_circle</span>
+                    <span id="main-service-name" class="font-bold text-white"></span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-300 mb-3">Ma rabtaa inaad ku darsato?</h3>
+                <div class="space-y-3" id="upsell-services-list"></div>
+                <button onclick="goToPayment()" class="w-full py-3 bg-primary text-background-dark font-bold rounded-md hover:bg-primary/90 mt-6">Xiga</button>
+                <button onclick="showPage('page-destination')" class="w-full text-sm text-slate-500 hover:text-white text-center mt-4 block">Ku laabo</button>
+            </div>
+        </div>
+        <div id="page-payment" class="page-hidden min-h-[80vh] flex items-center justify-center py-12 px-4">
+            <div class="w-full max-w-lg bg-slate-900 p-8 rounded-xl border border-slate-700">
+                <div class="text-center mb-6"><p class="text-sm text-slate-400 mb-2">Tallaabada 4/4</p><div class="bg-slate-700 h-1 rounded-full"><div class="bg-primary h-1 rounded-full" style="width: 100%"></div></div><h2 class="text-2xl font-bold text-white mt-4">Soo Koobid & Bixin</h2></div>
+                <div class="bg-slate-800 p-4 rounded mb-6"><h3 class="font-bold text-white mb-3 border-b border-slate-700 pb-2">Dalabkaaga:</h3><ul id="final-summary-list" class="text-slate-300 text-sm space-y-2 mb-4"></ul><div class="flex justify-between items-center border-t border-slate-700 pt-3"><span class="text-white">Khidmada laguugu shaqeynayo:</span><span class="text-xl font-bold text-primary">$5</span></div></div>
+                <h3 class="font-bold text-white mb-3">Hababka Bixinta (Tusaale):</h3>
+                <div class="flex gap-2 mb-6"><div class="bg-slate-800 p-2 rounded border border-primary text-center flex-1 cursor-pointer"><span class="text-white font-bold">EVC/Zaad/eDahab</span></div></div>
+                <div class="flex items-start gap-3 bg-slate-800 p-3 rounded mb-4"><span class="material-symbols-outlined text-primary">verified_user</span><p class="text-xs text-slate-400"><strong>Dammaanad 100%:</strong> Hadii aad ku qanci waydo, lacagta waa laguu soo celinayaa.</p></div>
+                <button onclick="processPaymentAndFinish()" class="w-full py-3 bg-primary text-background-dark font-bold rounded-md hover:bg-primary/90">Bixi $5</button>
+                <button onclick="showPage('page-services-package')" id="payment-back-btn" class="w-full text-sm text-slate-500 hover:text-white text-center mt-4 block">Dib u noqo</button>
+            </div>
+        </div>
+        <div id="page-success" class="page-hidden min-h-[80vh] flex items-center justify-center py-12 px-4 text-center">
+            <div class="w-full max-w-md bg-slate-800/50 p-10 rounded-xl border border-primary/30 animate-pulse-glow">
+                <span class="material-symbols-outlined text-primary text-7xl mb-4">check_circle</span>
+                <h1 class="text-3xl font-extrabold text-white mb-2">Hambalyo!</h1>
+                <p class="text-slate-300 mb-6">Dalabkaaga waa la xaqiijiyey. Goordhaw waxaa kula soo hadli doona shaqaalaha.</p>
+                <div class="bg-slate-900 p-4 rounded text-left mb-6">
+                    <p class="text-sm text-slate-400">ID Dalabka: <span class="text-white font-mono ml-2">EB-83920</span></p>
+                    <p class="text-sm text-slate-400">Khidmada La Bixiyey: <span id="final-amount-paid" class="text-primary font-bold ml-2">$5</span></p>
+                </div>
+                <button onclick="showPage('page-home')" class="text-primary hover:underline">Ku laabo Bogga Hore</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER OO DHAMMAYSTIRAN -->
+    <footer id="main-footer" class="bg-slate-900 border-t border-primary/20 text-slate-400">
+         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                 <div class="mb-6 md:mb-0"><a class="flex items-center gap-3 mb-4 cursor-pointer" onclick="showPage('page-home')"><img src="https://ebalami.com/Assets/e-balami-Logo.png" alt="e-Balami Logo" class="h-20 w-auto"><span class="text-2xl font-bold text-white">e-Balami</span></a><p class="text-sm">Shirkada e-Balami Waxay dhiseysaa Kalsoonidaada sababtoo ah Safarkaaga caafimaad wuxuu ku bilaabmaa kalsooni.</p></div>
+                 <div><h3 class="text-lg font-semibold text-white mb-4">Links</h3><ul class="space-y-2 text-sm"><li><a class="hover:text-primary transition-colors cursor-pointer" onclick="scrollToSection('page-home-hero')">Home</a></li><li><a class="hover:text-primary transition-colors cursor-pointer" onclick="scrollToSection('services')">Adeegyadeena</a></li><li><a class="hover:text-primary transition-colors cursor-pointer" onclick="scrollToSection('locations')">Wadamada</a></li><li><a class="hover:text-primary transition-colors cursor-pointer" onclick="scrollToSection('testimonials')">Markhaatiyaal</a></li></ul></div>
+                 <div><h3 class="text-lg font-semibold text-white mb-4">Nala soo xiriir</h3><ul class="space-y-2 text-sm"><li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">mail</span>ebalamiservices@gmail.com</li><li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">call</span>025 278 8887</li><li class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">location_on</span>Jigjiga, Somali Region</li></ul></div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-slate-700 text-center text-sm"><p>© 2024 e-Balami. Xuquuqdu way xifdisan tahay.</p></div>
+        </div>
+    </footer>
+</div>
+
+
+<!-- === KOODHKA UGU DAMBEEYA EE DHAMMAAN JAVASCRIPT-KA === -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+    // --- QAABEYNTA GUUD (WAA DIyaarsan TAHAY) ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyAq0ZMHARQzJlQDQVdcBrJLSOwrvI1tCLI",
+        authDomain: "ebalami-website.firebaseapp.com",
+        projectId: "ebalami-website",
+        storageBucket: "ebalami-website.firebasestorage.app",
+        messagingSenderId: "612434597781",
+        appId: "1:612434597781:web:cd46819a426fc8ee60c89c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Global state variables
+    let currentBookingType = 'package'; // Default to package
+    let userData = {};
+    const availableCities = ["Addis Ababa, Ethiopia", "Dire Dawa, Ethiopia", "Harar, Ethiopia", "Jigjiga, Ethiopia", "Hyderabad, India"];
+    const allServices = ['Ballanso Hotel', 'Ballanso Hospital', 'Turjumaan & Taxi'];
+
+
+    // --- SHAQOOYINKA MUHIIMKA AH EE WEBSITE-KA ---
+
+    // SHAQADA #1: Tan waxa ay maamushaa kala beddelka bogagga
+    function showPage(pageId) {
+        document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('page-hidden'));
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.remove('page-hidden');
+        }
+        const isHomePage = (pageId === 'page-home');
+        const headerNav = document.getElementById('main-nav');
+        const footer = document.getElementById('main-footer');
+        if (headerNav) headerNav.style.display = isHomePage ? 'flex' : 'none';
+        if (footer) footer.style.display = isHomePage ? 'block' : 'none';
+        window.scrollTo(0, 0);
+    }
+
+    // SHAQADA #2: Tan waxa ay u gudbisaa qaybaha bogga hore
+    function scrollToSection(sectionId) {
+        showPage('page-home'); // Hubi in bogga hore la arko
+        setTimeout(() => { // Sug wax yar si aad u hubiso in bogga hore la arko
+            const section = document.getElementById(sectionId);
+            if(section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100);
+    }
+
+    // SHAQADA #3: Tan waxa ay bilowdaa habka dalbashada
+    function startBookingProcess(bookingType) {
+        currentBookingType = bookingType;
+        console.log("Booking process started for type:", currentBookingType);
+        showPage('page-personal-info');
+    }
+
+    // SHAQADA #4: Tan waxa ay keydisaa macluumaadka oo ay sii gudbisaa
+    function saveAndGoToNextStep() {
+        const fullNameInput = document.getElementById('full-name');
+        const phoneInput = document.getElementById('phone-number');
+        const ageInput = document.getElementById('age');
+        const cityInput = document.getElementById('current-city');
+
+        if (fullNameInput && fullNameInput.value && phoneInput && phoneInput.value && ageInput && ageInput.value && cityInput && cityInput.value) {
+            
+            const errorBox = document.getElementById('form-error');
+            errorBox.classList.add('hidden'); // Qari fariinta qaladka markii hore
+
+            userData = {
+                name: fullNameInput.value,
+                age: ageInput.value,
+                city: cityInput.value,
+                phone: document.getElementById('country-code').value + phoneInput.value
+            };
+
+            db.collection("dalabyadaAanDhamaystirnayn").add({
+                ...userData,
+                waqtiga: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                console.log("GUUL: Macluumaadka waa la keydiyay!");
+                showPage('page-destination'); 
+            }).catch(error => {
+                console.error("KHALAD: ", error);
+                errorBox.textContent = "Cillad farsamo ayaa ka dhacday keydinta. Fadlan iskuday markale.";
+                errorBox.classList.remove('hidden');
+            });
+        } else {
+            const errorBox = document.getElementById('form-error');
+            errorBox.textContent = "Fadlan buuxi dhammaan meelaha bannaan.";
+            errorBox.classList.remove('hidden');
+        }
+    }
+    
+    // City Dropdown Logic
+    const destinationInput = document.getElementById('destination-input');
+    const cityDropdown = document.getElementById('city-dropdown');
+    let selectedValidCity = null;
+    destinationInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        cityDropdown.innerHTML = '';
+        selectedValidCity = null; 
+        if (!query) { cityDropdown.classList.add('hidden'); return; }
+
+        const matches = availableCities.filter(c => c.toLowerCase().includes(query));
+        if (matches.length > 0) {
+            cityDropdown.classList.remove('hidden');
+            matches.forEach(city => {
+                const item = document.createElement('div');
+                item.textContent = city;
+                item.onclick = () => {
+                    destinationInput.value = city;
+                    selectedValidCity = city;
+                    cityDropdown.classList.add('hidden');
+                    document.getElementById('dest-error').classList.add('hidden');
+                };
+                cityDropdown.appendChild(item);
+            });
+        } else {
+            cityDropdown.classList.add('hidden');
+        }
+    });
+    document.addEventListener('click', (e) => {
+        if (!destinationInput.contains(e.target)) cityDropdown.classList.add('hidden');
+    });
+
+    // Validate Step 2 and proceed
+    function validateStep2() {
+        const errorBox = document.getElementById('dest-error');
+        if (!selectedValidCity || destinationInput.value !== selectedValidCity) {
+            errorBox.textContent = "Fadlan liiska ka dooro mid ka mid ah magaalooyinka aan ka hawlgalno.";
+            errorBox.classList.remove('hidden');
+            return;
+        }
+        
+        errorBox.classList.add('hidden');
+        userData.destination = selectedValidCity;
+
+        if (currentBookingType === 'package') {
+            showPage('page-services-package');
+        } else {
+            setupSingleServicePage();
+            showPage('page-services-single');
+        }
+    }
+
+    // Setup Single Service Page
+    function setupSingleServicePage() {
+        document.getElementById('main-service-name').textContent = currentBookingType;
+        const upsellContainer = document.getElementById('upsell-services-list');
+        upsellContainer.innerHTML = '';
+        allServices.forEach(service => {
+            if (service !== currentBookingType) {
+                upsellContainer.innerHTML += `<label class="flex items-center p-3 bg-slate-900 rounded border border-slate-700 cursor-pointer"><input type="checkbox" class="text-primary focus:ring-primary bg-slate-800 border-slate-600 rounded"><span class="ml-3 text-white">${service}</span></label>`;
+            }
+        });
+    }
+
+    // Go to Payment page
+    function goToPayment() {
+        const summaryContainer = document.getElementById('final-summary-list');
+        summaryContainer.innerHTML = '';
+        let selectedServices = [];
+
+        const isPackageFlow = currentBookingType === 'package';
+        const serviceSourceId = isPackageFlow ? 'page-services-package' : 'page-services-single';
+        
+        if (!isPackageFlow) {
+            selectedServices.push(currentBookingType);
+        }
+        
+        document.querySelectorAll(`#${serviceSourceId} input[type=checkbox]:checked`).forEach(checkbox => {
+            const serviceName = checkbox.nextElementSibling.textContent;
+            if (!selectedServices.includes(serviceName)) {
+                 selectedServices.push(serviceName);
+            }
+        });
+
+        if (selectedServices.length === 0) {
+            alert("Fadlan dooro ugu yaraan hal adeeg.");
+            return;
+        }
+        
+        userData.services = selectedServices;
+
+        selectedServices.forEach(service => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="material-symbols-outlined text-xs text-primary mr-2 align-middle">check</span> ${service}`;
+            summaryContainer.appendChild(li);
+        });
+        
+        const paymentBackBtn = document.getElementById('payment-back-btn');
+        paymentBackBtn.onclick = () => showPage(serviceSourceId);
+
+        showPage('page-payment');
+    }
+
+    // Finalize booking
+    function processPaymentAndFinish() {
+        // Here, we save the full user journey data
+        db.collection("dalabyadaDhamaystiran").add({
+            ...userData,
+            waqtigaUguDambeeya: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            console.log("Dalabka oo dhammaystiran waa la keydiyay.");
+            showPage('page-success');
+        }).catch(error => {
+            console.error("Khalad ku yimid keydinta dalabka ugu dambeeya: ", error);
+            alert("Cillad ayaa dhacday, fadlan iskuday mar kale.");
+        });
+    }
+
+</script>
+<!-- === DHAMAADKA KOODHKA === -->
+
+</body>
+</html>
