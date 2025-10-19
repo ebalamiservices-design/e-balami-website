@@ -456,39 +456,16 @@
         showPage('page-payment');
     }
 
-  // SHAQADA UGU DAMBAYSA OO LOOGU TALAGALAY INAY LA SHAQAYSO BUUNDADA NETLIFY
-function processPaymentAndFinish() {
-    if (!userData.email) { // Waan hubinaynaa in email jiro
-        const emailInput = document.getElementById('email');
-        if (emailInput && emailInput.value) userData.email = emailInput.value;
+    function processPaymentAndFinish() {
+        db.collection("dalabyadaDhamaystiran").add({ ...userData, waqtigaUguDambeeya: firebase.firestore.FieldValue.serverTimestamp() })
+          .then(() => {
+                console.log("GUUL: Dalabkii oo dhan waa la keydiyay.");
+                showPage('page-success');
+          })
+          .catch(error => alert("Cillad ayaa dhacday: " + error));
     }
-
-    // 1. Marka hore waxaan diraynaa fariinta iimaylka
-    fetch('/.netlify/functions/send-email', {
-        method: 'POST',
-        body: JSON.stringify(userData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Fariinta iimaylka waa la diray:", data.message);
-        // 2. Marka labaad, waxaan keydinaynaa dalabka dhammaystiran
-        return db.collection("dalabyadaDhamaystiran").add({
-            ...userData,
-            waqtigaUguDambeeya: firebase.firestore.FieldValue.serverTimestamp()
-        });
-    })
-    .then(() => {
-        console.log("Dalabka oo dhammaystiran waa la keydiyay.");
-        // 3. Ugu dambayn, waxaan tusaynaa bogga Hambalyada
-        showPage('page-success');
-    })
-    .catch(error => {
-        console.error('Khalad ayaa dhacay:', error);
-        alert("Cillad farsamo ayaa ka dhacday habka ugu dambeeya.");
-        // Xitaa haddii emailku fashilmo, waxaan isku dayeynaa inaan tusno bogga guusha
-        showPage('page-success'); 
-    });
-}
+</script>
+<!-- === DHAMAADKA KOODHKA === -->
 
 </body>
 </html>
