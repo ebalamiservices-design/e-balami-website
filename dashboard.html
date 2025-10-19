@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="so" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>e-Balami Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FFC107' } } } }</script>
+</head>
+<body class="bg-gray-900 text-white p-4 sm:p-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+            <h1 class="text-3xl font-bold">Dalabyada Cusub</h1>
+            <button onclick="logoutUser()" class="bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-500 flex items-center gap-2"><span class="material-symbols-outlined">logout</span> Ka Bax</button>
+        </div>
+
+        <div class="mb-4 space-y-4 sm:space-y-0 sm:flex sm:justify-between sm:items-center">
+            <div class="flex bg-gray-800 p-1 rounded-lg gap-1">
+                <button id="tab-dhamaystiran" onclick="loadOrders('dalabyadaDhamaystiran')" class="flex-1 py-2 px-4 text-sm font-bold rounded-md bg-primary text-gray-900">Dhammaystiran</button>
+                <button id="tab-qabyo" onclick="loadOrders('dalabyadaAanDhamaystirnayn')" class="flex-1 py-2 px-4 text-sm font-bold rounded-md text-gray-400 hover:bg-gray-700">Qabyo ah</button>
+            </div>
+            <div class="relative w-full sm:max-w-xs">
+                <input id="search-input" onkeyup="filterTable()" type="text" placeholder="Raadi dalab..." class="w-full bg-gray-700 text-white rounded p-2 pl-10 focus:outline-none focus:ring-2 focus:ring-primary">
+                <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400">search</span>
+            </div>
+        </div>
+        
+        <div class="bg-gray-800 rounded-lg shadow-lg overflow-x-auto">
+            <table class="w-full min-w-[1200px]"> <!-- WAXAAN SII BALLAARIYAY CABBIRKA -->
+                <thead class="bg-gray-700">
+                    <tr>
+                        <th class="p-3 text-left text-xs font-bold uppercase">Magaca</th>
+                        <th class="p-3 text-left text-xs font-bold uppercase">Email</th> <!-- KAN WAA CUSUB YAHAY -->
+                        <th class="p-3 text-left text-xs font-bold uppercase">Taleefan</th>
+                        <th class="p-3 text-left text-xs font-bold uppercase">Magaalada Joogo</th>
+                        <th class="p-3 text-left text-xs font-bold uppercase">Goobta Safarka</th>
+                        <th class="p-3 text-left text-xs font-bold uppercase">Adeegyada</th>
+                        <th class="p-3 text-left text-xs font-bold uppercase">Waqtiga</th>
+                        <th class="p-3 text-center text-xs font-bold uppercase">Tallaabo</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-table">
+                    <!-- Xogta halkan ayay ku soo dhici doontaa -->
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4 text-right">
+             <button onclick="deleteAllOrders()" class="bg-red-800/50 text-red-300 text-xs font-bold py-2 px-3 rounded hover:bg-red-800/80">Tirtir Dhammaan</button>
+        </div>
+    </div>
+
+    <!-- === SANDUUQA MASKAXDA EE DASHBOARD-KA === -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAq0ZMHARQzJlQDQVdcBrJLSOwrvI1tCLI",
+            authDomain: "ebalami-website.firebaseapp.com",
+            projectId: "ebalami-website",
+            storageBucket: "ebalami-website.firebasestorage.app",
+            messagingSenderId: "612434597781",
+            appId: "1:612434597781:web:cd46819a426fc8ee60c89c"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentCollection = 'dalabyadaDhamaystiran'; // Default collection
+        let allOrdersData = []; 
+
+        function logoutUser() { auth.signOut().then(() => { window.location.href = 'login.html'; }); }
+        
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                loadOrders(currentCollection);
+            }
+        });
+
+        function loadOrders(collectionName) {
+            currentCollection = collectionName;
+            document.getElementById('tab-dhamaystiran').classList.toggle('bg-primary', collectionName === 'dalabyadaDhamaystiran');
+            document.getElementById('tab-dhamaystiran').classList.toggle('text-gray-900', collectionName === 'dalabyadaDhamaystiran');
+            document.getElementById('tab-qabyo').classList.toggle('bg-primary', collectionName === 'dalabyadaAanDhamaystirnayn');
+            document.getElementById('tab-qabyo').classList.toggle('text-gray-900', collectionName === 'dalabyadaAanDhamaystirnayn');
+            
+            const tableBody = document.getElementById('orders-table');
+            const timeField = collectionName === 'dalabyadaDhamaystiran' ? 'waqtigaUguDambeeya' : 'waqtiga';
+            
+            db.collection(collectionName).orderBy(timeField, "desc").onSnapshot(snapshot => {
+                tableBody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">Soo ruxidda...</td></tr>`;
+                if (snapshot.empty) {
+                    tableBody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">Wali wax dalab ah kama jiro qaybtan.</td></tr>`;
+                    return;
+                }
+                
+                allOrdersData = snapshot.docs;
+                renderTable(allOrdersData);
+            });
+        }
+        
+        function renderTable(docs) {
+            const tableBody = document.getElementById('orders-table');
+            let rows = '';
+            docs.forEach(doc => {
+                const data = doc.data();
+                const services = Array.isArray(data.services) ? data.services.join(', ') : 'Lama hayo';
+                const timestamp = data.waqtigaUguDambeeya || data.waqtiga;
+                const date = timestamp ? timestamp.toDate().toLocaleString('so-SO', { dateStyle: 'short', timeStyle: 'short'}) : 'Lama hayo';
+                
+                // HALKAN AYAAN EMAILKA KU SOO BANDHIGAYNAA
+                rows += `<tr class="border-b border-gray-700 hover:bg-gray-700/50">
+                    <td class="p-3 text-sm">${data.name || data.magacMacmiil || ''}</td>
+                    <td class="p-3 text-sm text-cyan-400">${data.email || ''}</td> <!-- KAN WAA CUSUB YAHAY -->
+                    <td class="p-3 text-sm">${data.phone || data.taleefanMacmiil || ''}</td>
+                    <td class="p-3 text-sm">${data.city || data.magaaladaMacmiil || ''}</td>
+                    <td class="p-3 text-sm">${data.destination || 'Aan la dooran'}</td>
+                    <td class="p-3 text-sm">${services}</td>
+                    <td class="p-3 text-xs text-gray-400">${date}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteOrder('${currentCollection}', '${doc.id}')" class="text-red-400 hover:text-red-200">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </td>
+                </tr>`;
+            });
+            tableBody.innerHTML = rows;
+        }
+
+        function filterTable() { /* sidii hore oo kale */ }
+        function deleteOrder(collection, docId) { /* sidii hore oo kale */ }
+        function deleteAllOrders() { /* sidii hore oo kale */ }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="so" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - e-Balami Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#FFC107' } } } }</script>
+</head>
+<body class="bg-gray-900 flex items-center justify-center h-screen">
+    <div class="w-full max-w-md bg-gray-800 p-8 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold text-white text-center mb-6">e-Balami Dashboard</h2>
+        <input id="email" type="email" placeholder="Email" class="w-full bg-gray-700 text-white rounded p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-primary">
+        <input id="password" type="password" placeholder="Password" class="w-full bg-gray-700 text-white rounded p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-primary">
+        <button onclick="loginUser()" class="w-full bg-primary text-gray-900 font-bold p-3 rounded hover:bg-yellow-400">Soo Gal</button>
+        <p id="login-error" class="text-red-400 text-center mt-4 hidden"></p>
+    </div>
+    <!-- === SANDUUQA MASKAXDA EE DASHBOARD-KA === -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script>
+    // QAYBTA #1: FURAYAASHII AAN HORAY U HAYSANNAY
+    const firebaseConfig = {
+        apiKey: "AIzaSyAq0ZMHARQzJlQDQVdcBrJLSOwrvI1tCLI",
+        authDomain: "ebalami-website.firebaseapp.com",
+        projectId: "ebalami-website",
+        storageBucket: "ebalami-website.firebasestorage.app",
+        messagingSenderId: "612434597781",
+        appId: "1:612434597781:web:cd46819a426fc8ee60c89c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // QAYBTA #2: SHAQOOYINKA ALBAABKA & QOLKA MARTIDA
+    // HA KA WELWELIN FAHANKOODA, WAA DIYAARSAN YIHIIN
+    function loginUser() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const errorP = document.getElementById('login-error');
+        auth.signInWithEmailAndPassword(email, password)
+            .then(() => { window.location.href = 'dashboard.html'; })
+            .catch(error => { errorP.textContent = "Email ama Password khaldan."; errorP.classList.remove('hidden'); });
+    }
+
+    function logoutUser() {
+        auth.signOut().then(() => { window.location.href = 'login.html'; });
+    }
+
+    // SHAQADA #3: ILAALIYAHA AAN MUUQAN (SECURITY GUARD)
+    auth.onAuthStateChanged(user => {
+        const onDashboard = window.location.pathname.includes('dashboard.html');
+        if (onDashboard && !user) { // Haddii uu qof isku dayo inuu galo qolka martida isagoon furaha haysan
+            window.location.href = 'login.html';
+        } else if (onDashboard && user) { // Haddii qofka furaha haysta uu galo
+            loadOrders(); // Soo geli dalabyada
+        }
+    });
+
+    // SHAQADA #4: SHAQAALAHA DALABYADA SOO QORAYA
+    function loadOrders() {
+        const tableBody = document.getElementById('orders-table');
+        if (!tableBody) return; // Jooji haddii aanan joogin bogga dashboard-ka
+        db.collection("dalabyadaDhamaystiran").orderBy("waqtigaUguDambeeya", "desc").onSnapshot(snapshot => {
+            if (snapshot.empty) {
+                tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">Wali wax dalab ah ma jiro.</td></tr>`;
+                return;
+            }
+            let rows = '';
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const services = Array.isArray(data.services) ? data.services.join(', ') : 'Lama hayo';
+                rows += `<tr class="border-b border-gray-700 hover:bg-gray-700/50">
+                    <td class="p-3">${data.name || ''}</td>
+                    <td class="p-3">${data.phone || ''}</td>
+                    <td class="p-3">${data.city || ''}</td>
+                    <td class="p-3">${data.destination || ''}</td>
+                    <td class="p-3">${services}</td>
+                </tr>`;
+            });
+            tableBody.innerHTML = rows;
+        });
+    }
+</script>
+<!-- === DHAMAADKA SANDUUQA === -->
+
+</body>
+</html>
